@@ -1,8 +1,12 @@
 // 'use strict'
 import mongoose from 'mongoose';
 import app from './app.js';
+import dotenv from 'dotenv';
 
-const uriBD = 'mongodb+srv://marianomacias:mariano2311@coderhouse.ioorf9s.mongodb.net/?retryWrites=true&w=majority&appName=coderhouse';
+// Configurar dotenv para cargar variables de entorno desde .env
+dotenv.config();
+
+const uriBD = process.env.MONGO_URI;
 const PORT = process.env.PORT || 3000;
 
 async function connectBD(){
