@@ -5,7 +5,11 @@ import controller from '../controllers/article.js';
 
 const router = express.Router();
 
+//rutas de pruebas
 router.post('/datos-curso', controller.datosCurso);
 router.get('/test-de-controller', controller.test);
+
+//rutas utiles
+router.post('/save', controller.save);
 
 export default router;

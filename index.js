@@ -12,7 +12,11 @@ const PORT = process.env.PORT || 3000;
 async function connectBD(){
     try {
         //coneccion a base de datos
-        await mongoose.connect(uriBD)
+        await mongoose.connect(uriBD, {
+            // useNewUrlParser: true,
+            // useUnifiedTopology: true,
+            dbName: 'test'  // Aquí especificamos el nombre de la base de datos
+        })
           console.log('Conexión a MongoDB exitosa');
           // Iniciar el servidor
         app.listen(PORT, () => {
