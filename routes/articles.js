@@ -11,5 +11,6 @@ router.get('/test-de-controller', controller.test);
 
 //rutas utiles
 router.post('/save', controller.save);
+router.get('/articles', controller.getArticles);
 
 export default router;

@@ -16,6 +16,7 @@ async function connectBD(){
             // useNewUrlParser: true,
             // useUnifiedTopology: true,
             dbName: 'test'  // Aquí especificamos el nombre de la base de datos
+            // dbName: 'coder_app'  // Especificar la base de datos
         })
           console.log('Conexión a MongoDB exitosa');
           // Iniciar el servidor

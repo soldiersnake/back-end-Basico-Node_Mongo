@@ -70,7 +70,27 @@ const controller = {
                 message:'Los datos no son validos!!'
             })
         }
-    }
+    },
+
+    // Traer articulos
+    getArticles: async (req, res) => {
+        try {
+            //find
+            //si al metodo .find el objeto enviamos vacio {} traemos toda la data
+            //el metodo .sort es para darle un ordenamiento segun el campo y segun do signo el (-) invierte el orden
+            let articles = await Article.find({}).sort('-_id').exec() 
+            return res.status(200).send({
+                status: 'Success',
+                articles
+            })
+        } catch (error) {
+            return res.status(500).send({
+                status: 'Error',
+                message: 'No se pudieron traer los articulos',
+                error
+            })
+        }
+    },
 
 }; //end controller
 
