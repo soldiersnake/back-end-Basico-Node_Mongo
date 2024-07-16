@@ -116,20 +116,96 @@ const controller = {
         try {
 
             let articuloEncontrado = await Article.findById(articleId);
+            //verifico que no sea null ni undefined
+            if(!articuloEncontrado){
+                return res.status(404).send({
+                    status: 'Error',
+                    message: 'Artículo no encontrado'
+                });
+            }
             //devolver el json
             return res.status(200).send({
                 status: 'Success',
+                message: 'Articulo encontrado',
                 articuloEncontrado
             })
         } catch (error) {
             return res.status(500).send({
                 status: 'Error',
                 message: 'Articulo no encontrado',
-                error
+                error: error.message
             })
         }
+    },
 
+    update: async (req, res) => {
+        //tomar el ID de url
+        let articleId = req.params.id;
+        //recoger datos que llegan por PUT
+        let params = req.body;
+        //validar datos
+        try {
+            var validate_title = !validator.isEmpty(params.title);
+            var validate_content = !validator.isEmpty(params.content);
+        } catch (error) {
+            return res.status(404).send({
+                status:'Error',
+                message: 'Faltan o son incorrectos...'
+            });
+        }
 
+        if(validate_title && validate_content){
+            try {
+                //find and update
+                let articuloActualizado = await Article.findOneAndUpdate({_id: articleId}, params, {new:true}); //busco el articulo por _id y lo actualizo
+                return res.status(200).send({
+                    status: 'Success',
+                    articuloActualizado
+                })
+            } catch (error) {
+                return res.status(500).send({
+                    status: 'Error',
+                    message: error
+                })
+            }
+        }else{
+            //devolver respuesta de error
+            return res.status(500).send({
+                status: 'Error',
+                message: 'No fue posible la actualizacion...'
+            })
+
+        }
+    },
+
+    delete: async (req, res) => {
+        //tomar el id de la URL
+        let articleId = req.params.id;
+        //find and Delete
+        try {
+            let articleDelete = await Article.findOneAndDelete({_id: articleId});
+            //verifico que no sea null o undefined
+            if (!articleDelete) {
+                return res.status(404).send({
+                    status: 'Error',
+                    message: 'Artículo no encontrado'
+                });
+            }
+    
+            return res.status(200).send({
+                status: 'Success',
+                message: 'Artículo eliminado correctamente',
+                article: articleDelete
+            });
+        } catch (error) {
+            //mensaje de error
+            return res.status(500).send({
+                status: 'Error',
+                message: 'Error al eliminar el artículo',
+                error: error.message
+            })
+        }
+        
     },
 
 }; //end controller
