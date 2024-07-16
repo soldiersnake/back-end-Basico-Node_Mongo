@@ -74,11 +74,19 @@ const controller = {
 
     // Traer articulos
     getArticles: async (req, res) => {
+        //guardamos la query en una funcion
+        const query = Article.find({});
+        const last = req.params.last;
+
+        //modificamos la query si existe limite en la ruta que llama al controlador
+        if(last || last != undefined){
+            query.limit(last)
+        }
         try {
             //find
             //si al metodo .find el objeto enviamos vacio {} traemos toda la data
             //el metodo .sort es para darle un ordenamiento segun el campo y segun do signo el (-) invierte el orden
-            let articles = await Article.find({}).sort('-_id').exec() 
+            let articles = await query.sort('-_id').exec() 
             return res.status(200).send({
                 status: 'Success',
                 articles
@@ -90,6 +98,38 @@ const controller = {
                 error
             })
         }
+    },
+
+    getArticle: async (req, res) => {
+
+        //recoger el id de la url
+        let articleId = req.params.id;
+        //comprobar que exista
+        if(!articleId || articleId == null || articleId == undefined){
+            return res.status(404).send({
+                status: 'Error',
+                message: 'No existe el articulo'
+            })
+        }
+
+        //buscar el articulo
+        try {
+
+            let articuloEncontrado = await Article.findById(articleId);
+            //devolver el json
+            return res.status(200).send({
+                status: 'Success',
+                articuloEncontrado
+            })
+        } catch (error) {
+            return res.status(500).send({
+                status: 'Error',
+                message: 'Articulo no encontrado',
+                error
+            })
+        }
+
+
     },
 
 }; //end controller
