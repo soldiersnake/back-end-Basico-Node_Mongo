@@ -263,13 +263,23 @@ const controller = {
             message: 'No fue posible cargar la imagen.'
         })
       }
-      return res.status(200).send({
-        fichero: req.files,
-        split: file_split,
-        file_ext,
-      });
     }
   }, //end upload file
+
+  getImage: async (req, res) => {
+    let file = req.params.image;
+    let path_file = './upload/articles/'+file;
+
+    if(fs.existsSync(path_file)){
+        return res.sendFile(path.resolve(path_file));
+    }else{
+        return res.status(404).send({
+            status: 'Error',
+            message: 'La imagen no existe'
+        })
+    }
+
+  },
 
 }; //end controller
 
