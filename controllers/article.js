@@ -278,7 +278,19 @@ const controller = {
             message: 'La imagen no existe'
         })
     }
+  },
 
+  search: async (req, res) => {
+    //sacar el string a buscar
+    let searchString = req.params.search;
+    //find or
+    Article.find({
+        
+    })
+    return res.status(200).send({
+        status: 'success',
+        searchString
+    })
   },
 
 }; //end controller
