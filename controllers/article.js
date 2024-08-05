@@ -283,14 +283,38 @@ const controller = {
   search: async (req, res) => {
     //sacar el string a buscar
     let searchString = req.params.search;
+    // Verificar si searchString está vacío o es null
+    if (!searchString || searchString.trim() === "") {
+      // Si searchString es vacío o null, llamar al método getArticles
+      return await controller.getArticles(req, res);
+  }
     //find or
-    Article.find({
-        
+    try {
+      let articuloBuscado = await Article.find({
+          "$or": [ //operador de busqueda OR de mongo
+          // aqui colocamos que lo que buscamos esta dentro de title o content, arroja los articulos que lo contenga
+            {"title" : {"$regex": searchString, "$options" : "i"}},
+            {"content" : {"$regex": searchString, "$options" : "i"}},
+          ]
+      })
+      .sort([['date', 'descending']])
+      if(articuloBuscado.length === 0){
+        return res.status(404).send({
+          status: 'Error',
+          message: 'No se encontraron articulos'
+        })
+      }
+      return res.status(200).send({
+          status: 'success',
+          articuloBuscado
+      })
+      
+    } catch (error) {
+      return res.status(400).send({
+        status: 'Error',
+        message: error.message // Usar el mensaje de error específico
     })
-    return res.status(200).send({
-        status: 'success',
-        searchString
-    })
+    }
   },
 
 }; //end controller
